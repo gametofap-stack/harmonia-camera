@@ -235,24 +235,23 @@ private struct RuleCard: View {
         }
     }
     
-    @ViewBuilder
-    private func thumbnailShape(for rule: CompositionRule) -> some Shape {
+    private func thumbnailShape(for rule: CompositionRule) -> AnyShape {
         switch rule {
-        case .ruleOfThirds: RuleOfThirdsShape()
-        case .harmonicArmature: HarmonicArmatureShape()
-        case .fibonacciSpiral: FibonacciSpiralShape()
-        case .phiGrid: PhiGridShape()
-        case .goldenTriangles: GoldenTrianglesShape()
-        case .dynamicSymmetry: DynamicSymmetryShape()
-        case .symmetry: SymmetryShape()
-        case .vanishingPoint: VanishingPointShape()
-        case .leadingLines: LeadingLinesShape()
-        case .framingDepth: FramingDepthShape()
-        case .landscapeDepth: LandscapeDepthShape()
-        case .fillTheFrame: FillTheFrameShape()
-        case .negativeSpace: NegativeSpaceShape()
-        case .linesAndPatterns: LinesAndPatternsShape()
-        case .leftToRight: LeftToRightShape()
+        case .ruleOfThirds: return AnyShape(RuleOfThirdsShape())
+        case .harmonicArmature: return AnyShape(HarmonicArmatureShape())
+        case .fibonacciSpiral: return AnyShape(FibonacciSpiralShape())
+        case .phiGrid: return AnyShape(PhiGridShape())
+        case .goldenTriangles: return AnyShape(GoldenTrianglesShape())
+        case .dynamicSymmetry: return AnyShape(DynamicSymmetryShape())
+        case .symmetry: return AnyShape(SymmetryShape())
+        case .vanishingPoint: return AnyShape(VanishingPointShape())
+        case .leadingLines: return AnyShape(LeadingLinesShape())
+        case .framingDepth: return AnyShape(FramingDepthShape())
+        case .landscapeDepth: return AnyShape(LandscapeDepthShape())
+        case .fillTheFrame: return AnyShape(FillTheFrameShape())
+        case .negativeSpace: return AnyShape(NegativeSpaceShape())
+        case .linesAndPatterns: return AnyShape(LinesAndPatternsShape())
+        case .leftToRight: return AnyShape(LeftToRightShape())
         }
     }
 }

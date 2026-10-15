@@ -11,6 +11,7 @@ public final class ThermalGovernor: ObservableObject {
     @Published public private(set) var currentThermalState: ProcessInfo.ThermalState = .nominal
     @Published public private(set) var visionSampleIntervalSeconds: TimeInterval = AppConfiguration.Performance.visionSampleIntervalSeconds
     @Published public private(set) var isVisionPausedDueToThermals: Bool = false
+    @Published public private(set) var thermalStatusBadge: String? = nil
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -40,34 +41,31 @@ public final class ThermalGovernor: ObservableObject {
             // Full Performance: 10 Hz Vision sampling (every 100ms)
             self.visionSampleIntervalSeconds = 0.10
             self.isVisionPausedDueToThermals = false
+            self.thermalStatusBadge = nil
             
         case .fair:
             // Moderate Thermal Load: 8 Hz Vision sampling (every 125ms)
             self.visionSampleIntervalSeconds = 0.125
             self.isVisionPausedDueToThermals = false
+            self.thermalStatusBadge = nil
             
         case .serious:
             // Heavy Thermal Load: Scale down to 3 Hz (every 333ms) to prevent hardware throttling
             self.visionSampleIntervalSeconds = 0.333
             self.isVisionPausedDueToThermals = false
+            self.thermalStatusBadge = "Serious Thermals · AI Throttled"
             
         case .critical:
             // Extreme Thermal Load: Pause background Neural Engine inference completely
             // Guarantees camera preview and photo capture remain locked at 60 FPS without crashing
             self.visionSampleIntervalSeconds = 1.0
             self.isVisionPausedDueToThermals = true
+            self.thermalStatusBadge = "Critical Thermals · AI Paused"
             
         @unknown default:
             self.visionSampleIntervalSeconds = 0.10
             self.isVisionPausedDueToThermals = false
-        }
-    }
-    
-    public var thermalStatusBadge: String? {
-        switch currentThermalState {
-        case .serious: return "Serious Thermals · AI Throttled"
-        case .critical: return "Critical Thermals · AI Paused"
-        default: return nil
+            self.thermalStatusBadge = nil
         }
     }
 }

@@ -43,39 +43,38 @@ public struct CompositionOverlayView: View {
     }
     
     // MARK: - Active Shape Router
-    @ViewBuilder
-    private var activeShapeView: some Shape {
+    private var activeShapeView: AnyShape {
         switch environment.activeRule {
         case .ruleOfThirds:
-            RuleOfThirdsShape()
+            return AnyShape(RuleOfThirdsShape())
         case .harmonicArmature:
-            HarmonicArmatureShape()
+            return AnyShape(HarmonicArmatureShape())
         case .fibonacciSpiral:
-            FibonacciSpiralShape()
+            return AnyShape(FibonacciSpiralShape())
         case .phiGrid:
-            PhiGridShape()
+            return AnyShape(PhiGridShape())
         case .goldenTriangles:
-            GoldenTrianglesShape()
+            return AnyShape(GoldenTrianglesShape())
         case .dynamicSymmetry:
-            DynamicSymmetryShape()
+            return AnyShape(DynamicSymmetryShape())
         case .symmetry:
-            SymmetryShape()
+            return AnyShape(SymmetryShape())
         case .vanishingPoint:
-            VanishingPointShape()
+            return AnyShape(VanishingPointShape())
         case .leadingLines:
-            LeadingLinesShape()
+            return AnyShape(LeadingLinesShape())
         case .framingDepth:
-            FramingDepthShape()
+            return AnyShape(FramingDepthShape())
         case .landscapeDepth:
-            LandscapeDepthShape()
+            return AnyShape(LandscapeDepthShape())
         case .fillTheFrame:
-            FillTheFrameShape()
+            return AnyShape(FillTheFrameShape())
         case .negativeSpace:
-            NegativeSpaceShape()
+            return AnyShape(NegativeSpaceShape())
         case .linesAndPatterns:
-            LinesAndPatternsShape()
+            return AnyShape(LinesAndPatternsShape())
         case .leftToRight:
-            LeftToRightShape()
+            return AnyShape(LeftToRightShape())
         }
     }
     

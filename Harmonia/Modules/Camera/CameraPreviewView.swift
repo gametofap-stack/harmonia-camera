@@ -17,8 +17,7 @@ public struct CameraPreviewView: UIViewRepresentable {
         view.previewLayer.session = session
         view.previewLayer.videoGravity = .resizeAspectFill
         
-        // Optimize for ProMotion / 60 FPS rendering
-        view.previewLayer.connection?.automaticallyEnablesLowLightBoostWhenAvailable = true
+        // Configure layer properties
         return view
     }
     
