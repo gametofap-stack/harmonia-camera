@@ -16,7 +16,16 @@ jobs:
 
       - name: Select Xcode Version
         run: |
-          sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode.app
+          ls -d /Applications/Xcode* || true
+          if [ -d "/Applications/Xcode_16.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.2.app
+          elif [ -d "/Applications/Xcode_16.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.1.app
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.0.app
+          elif [ -d "/Applications/Xcode.app" ]; then
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
           xcodebuild -version
 
       - name: Install XcodeGen
@@ -40,8 +49,14 @@ jobs:
 
       - name: Package Harmonia.ipa
         run: |
+          APP_PATH=$(find build -name "Harmonia.app" -type d | head -n 1)
+          echo "Found Harmonia.app at: $APP_PATH"
+          if [ -z "$APP_PATH" ]; then
+            echo "ERROR: Harmonia.app not found in build directory!"
+            exit 1
+          fi
           mkdir -p Payload
-          cp -r build/Release-iphoneos/Harmonia.app Payload/
+          cp -r "$APP_PATH" Payload/
           zip -r Harmonia.ipa Payload
           ls -la Harmonia.ipa
 
