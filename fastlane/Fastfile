@@ -1,0 +1,57 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Run unit tests and Swift 6 concurrency verification"
+  lane :test do
+    scan(
+      scheme: "Harmonia",
+      devices: ["iPhone 15"],
+      clean: true
+    )
+  end
+
+  desc "Build and deploy staging build to TestFlight"
+  lane :beta do
+    increment_build_number(xcodeproj: "Harmonia.xcodeproj")
+    
+    # Match code signing (Development & App Store distribution certificates)
+    match(type: "appstore", readonly: is_ci)
+    
+    # Build release archive targeting iPhone 15 architecture (arm64)
+    build_app(
+      scheme: "Harmonia",
+      configuration: "Release",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "./build",
+      output_name: "Harmonia-Beta.ipa"
+    )
+    
+    # Upload to TestFlight with changelog
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      changelog: "Harmonia 1.0.0 Release Candidate with 15 composition rules and iPhone 15 dual-lens pipeline."
+    )
+  end
+
+  desc "Deploy final release build to App Store Connect for App Review"
+  lane :release do
+    match(type: "appstore", readonly: true)
+    
+    build_app(
+      scheme: "Harmonia",
+      configuration: "Release",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "./build",
+      output_name: "Harmonia-Production.ipa"
+    )
+    
+    upload_to_app_store(
+      force: true,
+      metadata_path: "./Harmonia/Resources/AppStoreMetadata.md",
+      submit_for_review: false,
+      automatic_release: false
+    )
+  end
+end

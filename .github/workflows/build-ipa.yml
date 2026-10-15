@@ -1,0 +1,53 @@
+name: Build Harmonia iOS IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: # Allows one-click manual build from GitHub Actions tab
+
+jobs:
+  build-ipa:
+    name: Build Sideloadable IPA on Cloud macOS
+    runs-on: macos-14 # Runs on Apple Silicon (M2) runner
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build Harmonia for iPhone (ARM64)
+        run: |
+          xcodebuild build \
+            -project Harmonia.xcodeproj \
+            -scheme Harmonia \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            BUILD_DIR=build
+
+      - name: Package Harmonia.ipa
+        run: |
+          mkdir -p Payload
+          cp -r build/Release-iphoneos/Harmonia.app Payload/
+          zip -r Harmonia.ipa Payload
+          ls -la Harmonia.ipa
+
+      - name: Upload Harmonia.ipa Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Harmonia-iPhone15-IPA
+          path: Harmonia.ipa
+          retention-days: 14

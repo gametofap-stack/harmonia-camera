@@ -1,0 +1,4 @@
+app_identifier("com.apple.harmonia.camera")
+apple_id(ENV["APPLE_ID"] || "developer@harmoniacamera.app")
+itc_team_id(ENV["ITC_TEAM_ID"])
+team_id(ENV["TEAM_ID"])
